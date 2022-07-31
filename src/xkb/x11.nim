@@ -105,7 +105,7 @@ const XKB_X11_MIN_MAJOR_XKB_VERSION* = 1
 const XKB_X11_MIN_MINOR_XKB_VERSION* = 0
 
 ## Flags for the xkb_x11_setup_xkb_extension() function.
-type xkb_x11_setup_xkb_extension_flags* = enum
+type XkbX11SetupXkbExtensionFlags* = enum
   ## Do not apply any flags.
   XKB_X11_SETUP_XKB_EXTENSION_NO_FLAGS = 0
 
@@ -145,7 +145,7 @@ type xkb_x11_setup_xkb_extension_flags* = enum
 ##      to distinguish XKB errors.  Can be NULL.
 ##
 ##  @returns 1 on success, or 0 on failure.
-proc xkb_x11_setup_xkb_extension*(connection: ptr xcb_connection_t; major_xkb_version: uint16_t; minor_xkb_version: uint16_t; flags: xkb_x11_setup_xkb_extension_flags; major_xkb_version_out: ptr uint16_t; minor_xkb_version_out: ptr uint16_t; base_event_out: ptr uint8_t; base_error_out: ptr uint8_t): cint {.importc: "xkb_x11_setup_xkb_extension".}
+proc xkb_x11_setup_xkb_extension*(connection: ptr XcbConnection; major_xkb_version: uint16; minor_xkb_version: uint16; flags: XkbX11SetupXkbExtensionFlags; major_xkb_version_out: ptr uint16; minor_xkb_version_out: ptr uint16; base_event_out: ptr uint8; base_error_out: ptr uint8): cint {.importc: "xkb_x11_setup_xkb_extension".}
 
 ##  Get the keyboard device ID of the core X11 keyboard.
 ##
@@ -153,7 +153,7 @@ proc xkb_x11_setup_xkb_extension*(connection: ptr xcb_connection_t; major_xkb_ve
 ##
 ##  @returns A device ID which may be used with other xkb_x11_* functions,
 ##           or -1 on failure.
-proc xkb_x11_get_core_keyboard_device_id*(connection: ptr xcb_connection_t): int32_t {.importc: "xkb_x11_get_core_keyboard_device_id".}
+proc xkb_x11_get_core_keyboard_device_id*(connection: ptr XcbConnection): int32 {.importc: "xkb_x11_get_core_keyboard_device_id".}
 
 ##  Create a keymap from an X11 keyboard device.
 ##
@@ -175,7 +175,7 @@ proc xkb_x11_get_core_keyboard_device_id*(connection: ptr xcb_connection_t): int
 ##  @returns A keymap retrieved from the X server, or NULL on failure.
 ##
 ##  @memberof xkb_keymap
-proc xkb_x11_keymap_new_from_device*(context: ptr xkb_context; connection: ptr xcb_connection_t; device_id: int32_t; flags: xkb_keymap_compile_flags): ptr xkb_keymap {.importc: "xkb_x11_keymap_new_from_device".}
+proc xkb_x11_keymap_new_from_device*(context: ptr XkbContext; connection: ptr XcbConnection; device_id: int32; flags: XkbKeymapCompileFlags): ptr XkbKeymap {.importc: "xkb_x11_keymap_new_from_device".}
 
 ##  Create a new keyboard state object from an X11 keyboard device.
 ##
@@ -193,6 +193,6 @@ proc xkb_x11_keymap_new_from_device*(context: ptr xkb_context; connection: ptr x
 ##  @returns A new keyboard state object, or NULL on failure.
 ##
 ##  @memberof xkb_state
-proc xkb_x11_state_new_from_device*(keymap: ptr xkb_keymap; connection: ptr xcb_connection_t; device_id: int32_t): ptr xkb_state {.importc: "xkb_x11_state_new_from_device".}
+proc xkb_x11_state_new_from_device*(keymap: ptr XkbKeymap; connection: ptr XcbConnection; device_id: int32): ptr XkbState {.importc: "xkb_x11_state_new_from_device".}
 
 {.pop.}

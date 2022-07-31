@@ -26,9 +26,9 @@
 ##  Renamed keymap API.
 
 const
-  xkb_group_index_t* = xkb_layout_index_t
-  xkb_group_mask_t* = xkb_layout_mask_t
-  xkb_map_compile_flags* = xkb_keymap_compile_flags
+  XkbGroupIndex* = XkbLayoutIndex
+  XkbGroupMask* = XkbLayoutMask
+  XkbMapCompileFlags* = XkbKeymapCompileFlags
   XKB_GROUP_INVALID* = XKB_LAYOUT_INVALID
   XKB_STATE_DEPRESSED* = (XKB_STATE_MODS_DEPRESSED or XKB_STATE_LAYOUT_DEPRESSED)
   XKB_STATE_LATCHED* = (XKB_STATE_MODS_LATCHED or XKB_STATE_LAYOUT_LATCHED)

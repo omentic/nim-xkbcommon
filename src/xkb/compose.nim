@@ -106,7 +106,7 @@ import xkb/common
 ##
 ##  The compose table holds the definitions of the Compose sequences, as
 ##  gathered from Compose files.  It is immutable.
-discard "forward decl of xkb_compose_table"
+type XkbComposeTable* = object
 
 ##  @struct xkb_compose_state
 ##  Opaque Compose state object.
@@ -117,16 +117,17 @@ discard "forward decl of xkb_compose_table"
 ##  the input, and composed keysyms and strings are the output.
 ##
 ##  The compose state is usually associated with a keyboard device.
-discard "forward decl of xkb_compose_state"
+type XkbComposeState* = object
 
 ## Flags affecting Compose file compilation.
-type xkb_compose_compile_flags* = enum ## * Do not apply any flags.
-  XKB_COMPOSE_COMPILE_NO_FLAGS = 0
+type XkbComposeCompileFlags* {.pure.} = enum
+  ## Do not apply any flags.
+  NO_FLAGS = 0
 
 ## The recognized Compose file formats.
-type xkb_compose_format* = enum
+type XkbComposeFormat* {.pure.} = enum
   ## The classic libX11 Compose text format, described in Compose(5).
-  XKB_COMPOSE_FORMAT_TEXT_V1 = 1
+  TEXT_V1 = 1
 
 ##  @page compose-locale Compose Locale
 ##  @parblock
@@ -206,7 +207,7 @@ type xkb_compose_format* = enum
 ##  compilation failed or a Compose file was not found.
 ##
 ##  @memberof xkb_compose_table
-proc xkb_compose_table_new_from_locale*(context: ptr xkb_context; locale: cstring; flags: xkb_compose_compile_flags): ptr xkb_compose_table {.importc: "xkb_compose_table_new_from_locale".}
+proc new_from_locale_xkb_compose_table*(context: ptr XkbContext; locale: cstring; flags: XkbComposeCompileFlags): ptr XkbComposeTable {.importc: "xkb_compose_table_new_from_locale".}
 
 ##  Create a new compose table from a Compose file.
 ##
@@ -225,7 +226,7 @@ proc xkb_compose_table_new_from_locale*(context: ptr xkb_context; locale: cstrin
 ##  the compilation failed.
 ##
 ##  @memberof xkb_compose_table
-proc xkb_compose_table_new_from_file*(context: ptr xkb_context; file: ptr FILE; locale: cstring; format: xkb_compose_format; flags: xkb_compose_compile_flags): ptr xkb_compose_table {.importc: "xkb_compose_table_new_from_file".}
+proc new_from_file_xkb_compose_table*(context: ptr XkbContext; file: ptr FILE; locale: cstring; format: XkbComposeFormat; flags: XkbComposeCompileFlags): ptr XkbComposeTable {.importc: "xkb_compose_table_new_from_file".}
 
 ##  Create a new compose table from a memory buffer.
 ##
@@ -234,26 +235,26 @@ proc xkb_compose_table_new_from_file*(context: ptr xkb_context; file: ptr FILE; 
 ##
 ##  @see xkb_compose_table_new_from_file()
 ##  @memberof xkb_compose_table
-proc xkb_compose_table_new_from_buffer*(context: ptr xkb_context; buffer: cstring; length: csize_t; locale: cstring; format: xkb_compose_format; flags: xkb_compose_compile_flags): ptr xkb_compose_table {.importc: "xkb_compose_table_new_from_buffer".}
+proc new_from_buffer_xkb_compose_table*(context: ptr XkbContext; buffer: cstring; length: csize_t; locale: cstring; format: XkbComposeFormat; flags: XkbComposeCompileFlags): ptr XkbComposeTable {.importc: "xkb_compose_table_new_from_buffer".}
 
 ##  Take a new reference on a compose table.
 ##
 ##  @returns The passed in object.
 ##
 ##  @memberof xkb_compose_table
-proc xkb_compose_table_ref*(table: ptr xkb_compose_table): ptr xkb_compose_table {.importc: "xkb_compose_table_ref".}
+proc ref*(table: ptr XkbComposeTable): ptr XkbComposeTable {.importc: "xkb_compose_table_ref".}
 
 ##  Release a reference on a compose table, and possibly free it.
 ##
 ##  @param table The object.  If it is NULL, this function does nothing.
 ##
 ##  @memberof xkb_compose_table
-proc xkb_compose_table_unref*(table: ptr xkb_compose_table) {.importc: "xkb_compose_table_unref".}
+proc unref*(table: ptr XkbComposeTable) {.importc: "xkb_compose_table_unref".}
 
 ## Flags for compose state creation.
-type xkb_compose_state_flags* = enum
+type XkbComposeStateFlags* {.pure.} = enum
   ## Do not apply any flags.
-  XKB_COMPOSE_STATE_NO_FLAGS = 0
+  NO_FLAGS = 0
 
 ##  Create a new compose state object.
 ##
@@ -265,21 +266,21 @@ type xkb_compose_state_flags* = enum
 ##  @returns A new compose state, or NULL on failure.
 ##
 ##  @memberof xkb_compose_state
-proc xkb_compose_state_new*(table: ptr xkb_compose_table; flags: xkb_compose_state_flags): ptr xkb_compose_state {.importc: "xkb_compose_state_new".}
+proc new_xkb_compose_state*(table: ptr XkbComposeTable; flags: XkbComposeStateFlags): ptr XkbComposeState {.importc: "xkb_compose_state_new".}
 
 ##  Take a new reference on a compose state object.
 ##
 ##  @returns The passed in object.
 ##
 ##  @memberof xkb_compose_state
-proc xkb_compose_state_ref*(state: ptr xkb_compose_state): ptr xkb_compose_state {.importc: "xkb_compose_state_ref".}
+proc ref*(state: ptr XkbComposeState): ptr XkbComposeState {.importc: "xkb_compose_state_ref".}
 
 ##  Release a reference on a compose state object, and possibly free it.
 ##
 ##  @param state The object.  If NULL, do nothing.
 ##
 ##  @memberof xkb_compose_state
-proc xkb_compose_state_unref*(state: ptr xkb_compose_state) {.importc: "xkb_compose_state_unref".}
+proc unref*(state: ptr XkbComposeState) {.importc: "xkb_compose_state_unref".}
 
 ##  Get the compose table which a compose state object is using.
 ##
@@ -291,26 +292,26 @@ proc xkb_compose_state_unref*(state: ptr xkb_compose_state) {.importc: "xkb_comp
 ##  lifetime of the state.
 ##
 ##  @memberof xkb_compose_state
-proc xkb_compose_state_get_compose_table*(state: ptr xkb_compose_state): ptr xkb_compose_table {.importc: "xkb_compose_state_get_compose_table".}
+proc get_compose_table*(state: ptr XkbComposeState): ptr XkbComposeTable {.importc: "xkb_compose_state_get_compose_table".}
 
 ## Status of the Compose sequence state machine.
-type xkb_compose_status* = enum
+type XkbComposeStatus* {.pure.} = enum
   ## The initial state; no sequence has started yet.
-  XKB_COMPOSE_NOTHING,
+  NOTHING,
   ## In the middle of a sequence.
-  XKB_COMPOSE_COMPOSING,
+  COMPOSING,
   ## A complete sequence has been matched.
-  XKB_COMPOSE_COMPOSED,
+  COMPOSED,
   ## The last sequence was cancelled due to an unmatched keysym.
-  XKB_COMPOSE_CANCELLED
+  CANCELLED
 
 
 ## The effect of a keysym fed to xkb_compose_state_feed().
-type xkb_compose_feed_result* = enum
+type XkbComposeFeedResult* {.pure.} = enum
   ## The keysym had no effect - it did not affect the status.
-  XKB_COMPOSE_FEED_IGNORED,
+  IGNORED,
   ## The keysym started, advanced or cancelled a sequence.
-  XKB_COMPOSE_FEED_ACCEPTED
+  ACCEPTED
 
 ##  Feed one keysym to the Compose sequence state machine.
 ##
@@ -355,7 +356,7 @@ type xkb_compose_feed_result* = enum
 ##  if you want to keep a record of the sequence matched thus far.
 ##
 ##  @memberof xkb_compose_state
-proc xkb_compose_state_feed*(state: ptr xkb_compose_state; keysym: xkb_keysym_t): xkb_compose_feed_result {.importc: "xkb_compose_state_feed".}
+proc feed*(state: ptr XkbComposeState; keysym: XkbKeysym): XkbComposeFeedResult {.importc: "xkb_compose_state_feed".}
 
 ##  Reset the Compose sequence state machine.
 ##
@@ -363,13 +364,13 @@ proc xkb_compose_state_feed*(state: ptr xkb_compose_state; keysym: xkb_keysym_t)
 ##  is discarded.
 ##
 ##  @memberof xkb_compose_state
-proc xkb_compose_state_reset*(state: ptr xkb_compose_state) {.importc: "xkb_compose_state_reset".}
+proc reset*(state: ptr XkbComposeState) {.importc: "xkb_compose_state_reset".}
 
 ##  Get the current status of the compose state machine.
 ##
 ##  @see xkb_compose_status
 ##  @memberof xkb_compose_state
-proc xkb_compose_state_get_status*(state: ptr xkb_compose_state): xkb_compose_status {.importc: "xkb_compose_state_get_status".}
+proc get_status*(state: ptr XkbComposeState): XkbComposeStatus {.importc: "xkb_compose_state_get_status".}
 
 ##  Get the result Unicode/UTF-8 string for a composed sequence.
 ##
@@ -397,7 +398,7 @@ proc xkb_compose_state_get_status*(state: ptr xkb_compose_state): xkb_compose_st
 ##    required size (without the NUL-byte).
 ##
 ##  @memberof xkb_compose_state
-proc xkb_compose_state_get_utf8*(state: ptr xkb_compose_state; buffer: cstring; size: csize_t): cint {.importc: "xkb_compose_state_get_utf8".}
+proc get_utf8*(state: ptr XkbComposeState; buffer: cstring; size: csize_t): cint {.importc: "xkb_compose_state_get_utf8".}
 
 ##  Get the result keysym for a composed sequence.
 ##
@@ -408,6 +409,6 @@ proc xkb_compose_state_get_utf8*(state: ptr xkb_compose_state; buffer: cstring; 
 ##  not specify a result keysym, returns XKB_KEY_NoSymbol.
 ##
 ##  @memberof xkb_compose_state
-proc xkb_compose_state_get_one_sym*(state: ptr xkb_compose_state): xkb_keysym_t {.importc: "xkb_compose_state_get_one_sym".}
+proc get_one_sym*(state: ptr XkbComposeState): XkbKeysym {.importc: "xkb_compose_state_get_one_sym".}
 
 {.pop.}
