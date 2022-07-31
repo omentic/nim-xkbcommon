@@ -23,7 +23,11 @@
 
 {.push dynlib: "libxkbcommon.so".}
 
-import xcb, xkb/common
+# FIXME: not defined anywhere?
+# typedef struct xcb_connection_t xcb_connection_t;
+type XcbConnection = object
+
+import common
 
 ##  @file
 ##  libxkbcommon-x11 API - Additional X11 support for xkbcommon.

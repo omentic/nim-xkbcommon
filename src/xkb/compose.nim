@@ -23,7 +23,7 @@
 
 {.push dynlib: "libxkbcommon.so".}
 
-import xkb/common
+import common
 
 ##  @file
 ##  libxkbcommon Compose API - support for Compose and dead-keys.
@@ -242,7 +242,7 @@ proc new_from_buffer_xkb_compose_table*(context: ptr XkbContext; buffer: cstring
 ##  @returns The passed in object.
 ##
 ##  @memberof xkb_compose_table
-proc ref*(table: ptr XkbComposeTable): ptr XkbComposeTable {.importc: "xkb_compose_table_ref".}
+proc `ref`*(table: ptr XkbComposeTable): ptr XkbComposeTable {.importc: "xkb_compose_table_ref".}
 
 ##  Release a reference on a compose table, and possibly free it.
 ##
@@ -273,7 +273,7 @@ proc new_xkb_compose_state*(table: ptr XkbComposeTable; flags: XkbComposeStateFl
 ##  @returns The passed in object.
 ##
 ##  @memberof xkb_compose_state
-proc ref*(state: ptr XkbComposeState): ptr XkbComposeState {.importc: "xkb_compose_state_ref".}
+proc `ref`*(state: ptr XkbComposeState): ptr XkbComposeState {.importc: "xkb_compose_state_ref".}
 
 ##  Release a reference on a compose state object, and possibly free it.
 ##

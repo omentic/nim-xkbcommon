@@ -23,18 +23,22 @@
 ##  Author: Daniel Stone <daniel@fooishbar.org>
 ##
 
+import common
+
 ##  Renamed keymap API.
 
-const
+type
   XkbGroupIndex* = XkbLayoutIndex
   XkbGroupMask* = XkbLayoutMask
   XkbMapCompileFlags* = XkbKeymapCompileFlags
+
+const
   XKB_GROUP_INVALID* = XKB_LAYOUT_INVALID
-  XKB_STATE_DEPRESSED* = (XKB_STATE_MODS_DEPRESSED or XKB_STATE_LAYOUT_DEPRESSED)
-  XKB_STATE_LATCHED* = (XKB_STATE_MODS_LATCHED or XKB_STATE_LAYOUT_LATCHED)
-  XKB_STATE_LOCKED* = (XKB_STATE_MODS_LOCKED or XKB_STATE_LAYOUT_LOCKED)
-  XKB_STATE_EFFECTIVE* = (XKB_STATE_DEPRESSED or XKB_STATE_LATCHED or
-      XKB_STATE_LOCKED or XKB_STATE_MODS_EFFECTIVE or XKB_STATE_LAYOUT_EFFECTIVE)
+  XKB_STATE_DEPRESSED* = (XkbStateComponent.MODS_DEPRESSED.int or XkbStateComponent.LAYOUT_DEPRESSED.int)
+  XKB_STATE_LATCHED* = (XkbStateComponent.MODS_LATCHED.int or XkbStateComponent.LAYOUT_LATCHED.int)
+  XKB_STATE_LOCKED* = (XkbStateComponent.MODS_LOCKED.int or XkbStateComponent.LAYOUT_LOCKED.int)
+  XKB_STATE_EFFECTIVE* = (XKB_STATE_DEPRESSED.int or XKB_STATE_LATCHED.int or
+      XKB_STATE_LOCKED.int or XkbStateComponent.MODS_EFFECTIVE.int or XkbStateComponent.LAYOUT_EFFECTIVE.int)
 
 template xkb_map_new_from_names*(context, names, flags: untyped): untyped =
   xkb_keymap_new_from_names(context, names, flags)
@@ -111,5 +115,5 @@ template xkb_state_get_map*(state: untyped): untyped =
 ##  Not needed anymore, since there's NO_FLAGS.
 
 const
-  XKB_MAP_COMPILE_PLACEHOLDER* = XKB_KEYMAP_COMPILE_NO_FLAGS
-  XKB_MAP_COMPILE_NO_FLAGS* = XKB_KEYMAP_COMPILE_NO_FLAGS
+  XKB_MAP_COMPILE_PLACEHOLDER* = XkbKeymapCompileFlags.NO_FLAGS
+  XKB_MAP_COMPILE_NO_FLAGS* = XkbKeymapCompileFlags.NO_FLAGS

@@ -2,7 +2,7 @@
 
 {.push dynlib: "libxkbcommon.so".}
 
-import xkb/[names, keysyms]
+import names, keysyms
 
 type
   XkbContext* = object
@@ -59,7 +59,7 @@ type XkbContextFlags* {.pure.} = enum
   NO_ENVIRONMENT_NAMES = (1 shl 1)
 
 proc new_xkb_context*(flags: XkbContextFlags): ptr XkbContext {.importc: "xkb_context_new".}
-proc ref*(context: ptr XkbContext): ptr XkbContext {.importc: "xkb_context_ref".}
+proc `ref`*(context: ptr XkbContext): ptr XkbContext {.importc: "xkb_context_ref".}
 proc unref*(context: ptr XkbContext) {.importc: "xkb_context_unref".}
 proc set_user_data*(context: ptr XkbContext; user_data: pointer) {.importc: "xkb_context_set_user_data".}
 proc get_user_data*(context: ptr XkbContext): pointer {.importc: "xkb_context_get_user_data".}
@@ -82,6 +82,9 @@ proc set_log_level*(context: ptr XkbContext; level: XkbLogLevel) {.importc: "xkb
 proc get_log_level*(context: ptr XkbContext): XkbLogLevel {.importc: "xkb_context_get_log_level".}
 proc set_log_verbosity*(context: ptr XkbContext; verbosity: cint) {.importc: "xkb_context_set_log_verbosity".}
 proc get_log_verbosity*(context: ptr XkbContext): cint {.importc: "xkb_context_get_log_verbosity".}
+
+type va_list {.importc: "va_list", header: "<stdarg.h>".} = object
+
 proc set_log_fn*(context: ptr XkbContext; log_fn: proc(context: ptr XkbContext; level: XkbLogLevel; format: cstring; args: va_list)) {.importc: "xkb_context_set_log_fn".}
 
 type XkbKeymapCompileFlags* {.pure.} = enum
@@ -96,10 +99,10 @@ proc new_from_file_xkb_keymap*(context: ptr XkbContext; file: ptr FILE; format: 
 proc new_from_string_xkb_keymap*(context: ptr XkbContext; string: cstring; format: XkbKeymapFormat; flags: XkbKeymapCompileFlags): ptr XkbKeymap {.importc: "xkb_keymap_new_from_string".}
 proc new_from_buffer_xkb_keymap*(context: ptr XkbContext; buffer: cstring; length: csize_t; format: XkbKeymapFormat; flags: XkbKeymapCompileFlags): ptr XkbKeymap {.importc: "xkb_keymap_new_from_buffer".}
 
-proc ref*(keymap: ptr XkbKeymap): ptr XkbKeymap {.importc: "xkb_keymap_ref".}
+proc `ref`*(keymap: ptr XkbKeymap): ptr XkbKeymap {.importc: "xkb_keymap_ref".}
 proc unref*(keymap: ptr XkbKeymap) {.importc: "xkb_keymap_unref".}
 
-const XKB_KEYMAP_USE_ORIGINAL_FORMAT* = (cast[xkb_keymap_format](-1))
+# const XKB_KEYMAP_USE_ORIGINAL_FORMAT* = (cast[XkbKeymapFormat](-1))
 
 proc get_as_string*(keymap: ptr XkbKeymap; format: XkbKeymapFormat): cstring {.importc: "xkb_keymap_get_as_string".}
 proc min_keycode*(keymap: ptr XkbKeymap): XkbKeycode {.importc: "xkb_keymap_min_keycode".}
@@ -131,7 +134,7 @@ proc get_syms*(keymap: ptr XkbKeymap; key: XkbKeycode; layout: XkbLayoutIndex; l
 proc repeats*(keymap: ptr XkbKeymap; key: XkbKeycode): cint {.importc: "xkb_keymap_key_repeats".}
 
 proc new_xkb_state*(keymap: ptr XkbKeymap): ptr XkbState {.importc: "xkb_state_new".}
-proc ref*(state: ptr XkbState): ptr XkbState {.importc: "xkb_state_ref".}
+proc `ref`*(state: ptr XkbState): ptr XkbState {.importc: "xkb_state_ref".}
 proc unref*(state: ptr XkbState) {.importc: "xkb_state_unref".}
 proc get_keymap*(state: ptr XkbState): ptr XkbKeymap {.importc: "xkb_state_get_keymap".}
 
@@ -168,9 +171,9 @@ proc serialize_mods*(state: ptr XkbState; components: XkbStateComponent): XkbMod
 proc serialize_layout*(state: ptr XkbState; components: XkbStateComponent): XkbLayoutIndex {.importc: "xkb_state_serialize_layout".}
 
 proc mod_name_is_active*(state: ptr XkbState; name: cstring; `type`: XkbStateComponent): cint {.importc: "xkb_state_mod_name_is_active".}
-proc mod_names_are_active*(state: ptr XkbState; `type`: XkbStateComponent; match: XkbStateMatch): cint {.varargs.} {.importc: "xkb_state_mod_names_are_active".}
-proc is_active*(state: ptr XkbState; idx: XkbModIndex; `type`: XkbStateComponent): cint {.importc: "xkb_state_mod_index_is_active".}
-proc mod_indices_are_active*(state: ptr XkbState; `type`: XkbStateComponent; match: XkbStateMatch): cint {.varargs.} {.importc: "xkb_state_mod_indices_are_active".}
+proc mod_names_are_active*(state: ptr XkbState; `type`: XkbStateComponent; match: XkbStateMatch): cint {.varargs, importc: "xkb_state_mod_names_are_active".}
+proc mod_index_is_active*(state: ptr XkbState; idx: XkbModIndex; `type`: XkbStateComponent): cint {.importc: "xkb_state_mod_index_is_active".}
+proc mod_indices_are_active*(state: ptr XkbState; `type`: XkbStateComponent; match: XkbStateMatch): cint {.varargs, importc: "xkb_state_mod_indices_are_active".}
 
 type XkbConsumedMode* {.pure.} = enum
   XKB, GTK
@@ -183,7 +186,7 @@ proc mod_index_is_consumed*(state: ptr XkbState; key: XkbKeycode; idx: XkbModInd
 proc mod_mask_remove_consumed*(state: ptr XkbState; key: XkbKeycode; mask: XkbModMask): XkbModMask {.importc: "xkb_state_mod_mask_remove_consumed".}
 
 proc layout_name_is_active*(state: ptr XkbState; name: cstring; `type`: XkbStateComponent): cint {.importc: "xkb_state_layout_name_is_active".}
-proc is_active*(state: ptr XkbState; idx: XkbLayoutIndex; `type`: XkbStateComponent): cint {.importc: "xkb_state_layout_index_is_active".}
+proc layout_index_is_active*(state: ptr XkbState; idx: XkbLayoutIndex; `type`: XkbStateComponent): cint {.importc: "xkb_state_layout_index_is_active".}
 
 proc led_name_is_active*(state: ptr XkbState; name: cstring): cint {.importc: "xkb_state_led_name_is_active".}
 proc led_index_is_active*(state: ptr XkbState; idx: XkbLedIndex): cint {.importc: "xkb_state_led_index_is_active".}
